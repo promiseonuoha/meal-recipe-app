@@ -1,11 +1,40 @@
+import { useLayoutEffect } from "react";
+import FavouriteButton from "../components/mealDetail/favourite-button";
 import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
 import { MEALS } from "../data/dummy-data";
 import SubTitle from "../components/mealDetail/subTitle";
 import Step from "../components/mealDetail/step";
 
-export default function MealDetails({ route }) {
+import { useSelector, useDispatch } from "react-redux";
+import { addFavourite, removeFavourite } from "../store/redux/favourite-slice";
+
+export default function MealDetails({ route, navigation }) {
   const mealId = route.params.mealId;
   const mealItem = MEALS.find((item) => item.id === mealId);
+  const favourites = useSelector((state) => state.favourite.mealIds);
+  const dispatch = useDispatch();
+
+  const isFavourite = favourites.includes(mealId);
+
+  const toggleFavouriteMeal = () => {
+    if (isFavourite) {
+      dispatch(removeFavourite({ id: mealId }));
+    } else {
+      dispatch(addFavourite({ id: mealId }));
+    }
+  };
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: mealItem.title,
+      headerRight: () => (
+        <FavouriteButton
+          name={isFavourite ? "star" : "star-outline"}
+          onPress={toggleFavouriteMeal}
+        />
+      ),
+    });
+  }, [isFavourite]);
 
   return (
     <ScrollView style={styles.container}>

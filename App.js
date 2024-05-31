@@ -1,5 +1,4 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet } from "react-native";
 
 // SCREENS
 import CategoriesScreen from "./screens/CategoriesScreen";
@@ -14,6 +13,10 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { useFonts } from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
+
+// Redux
+import { Provider } from "react-redux";
+import { store } from "./store/redux/store";
 
 const ScreenStack = createStackNavigator();
 const BottomTabs = createBottomTabNavigator();
@@ -54,46 +57,44 @@ export default function App() {
   return (
     <>
       <StatusBar style="light" />
-      <NavigationContainer>
-        <BottomTabs.Navigator
-          screenOptions={{
-            tabBarStyle: {
-              backgroundColor: "#351401",
-              borderBlockColor: "#351401",
-            },
-            tabBarInactiveTintColor: "white",
-            tabBarActiveTintColor: "#e48752",
-          }}
-        >
-          <BottomTabs.Screen
-            name="Categories"
-            component={Categories}
-            options={{
-              headerShown: false,
-              tabBarIcon: ({ color }) => (
-                <Ionicons name="list" color={color} size={17} />
-              ),
+      <Provider store={store}>
+        <NavigationContainer>
+          <BottomTabs.Navigator
+            screenOptions={{
+              tabBarStyle: {
+                backgroundColor: "#351401",
+                borderBlockColor: "#351401",
+              },
+              tabBarInactiveTintColor: "white",
+              tabBarActiveTintColor: "#e48752",
             }}
-          />
-          <BottomTabs.Screen
-            name="Favourites"
-            component={FavouriteScreen}
-            options={{
-              headerStyle: { backgroundColor: "#351401" },
-              headerTintColor: "white",
-              headerTitleStyle: { fontFamily: "open-sans-bold" },
-              headerShadowVisible: false,
-              tabBarIcon: ({ color }) => (
-                <Ionicons name="star" color={color} size={17} />
-              ),
-            }}
-          />
-        </BottomTabs.Navigator>
-      </NavigationContainer>
+          >
+            <BottomTabs.Screen
+              name="Categories"
+              component={Categories}
+              options={{
+                headerShown: false,
+                tabBarIcon: ({ color }) => (
+                  <Ionicons name="list" color={color} size={17} />
+                ),
+              }}
+            />
+            <BottomTabs.Screen
+              name="Favourites"
+              component={FavouriteScreen}
+              options={{
+                headerStyle: { backgroundColor: "#351401" },
+                headerTintColor: "white",
+                headerTitleStyle: { fontFamily: "open-sans-bold" },
+                headerShadowVisible: false,
+                tabBarIcon: ({ color }) => (
+                  <Ionicons name="star" color={color} size={17} />
+                ),
+              }}
+            />
+          </BottomTabs.Navigator>
+        </NavigationContainer>
+      </Provider>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {},
-});
